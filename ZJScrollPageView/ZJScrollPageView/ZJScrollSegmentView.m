@@ -32,8 +32,6 @@
 @property (strong, nonatomic) NSArray *deltaRGBA;
 @property (strong, nonatomic) NSArray *selectedColorRGBA;
 @property (strong, nonatomic) NSArray *normalColorRGBA;
-/** 缓存所有标题label */
-@property (nonatomic, strong) NSMutableArray *titleViews;
 // 缓存计算出来的每个标题的宽度
 @property (nonatomic, strong) NSMutableArray *titleWidths;
 // 响应标题点击
@@ -279,21 +277,24 @@ static CGFloat const contentSizeXOff = 20.0;
     CGFloat coverY = (self.bounds.size.height - coverH) * 0.5;
     
     if (self.scrollLine) {
-        
-        if (self.segmentStyle.isScrollTitle) {
-            self.scrollLine.frame = CGRectMake(coverX , self.zj_height - self.segmentStyle.scrollLineHeight, coverW , self.segmentStyle.scrollLineHeight);
-
-        } else {
-            if (self.segmentStyle.isAdjustCoverOrLineWidth) {
-                coverW = [self.titleWidths[_currentIndex] floatValue] + wGap;
-                coverX = (firstLabel.zj_width - coverW) * 0.5;
+        if (!CGSizeEqualToSize(CGSizeZero, self.segmentStyle.scrollLineSize)) {
+            self.scrollLine.bounds = CGRectMake(0 , 0, self.segmentStyle.scrollLineSize.width , self.segmentStyle.scrollLineSize.height);
+            self.scrollLine.center = CGPointMake(firstLabel.zj_centerX, self.zj_height - self.segmentStyle.scrollLineSize.height);
+        }else
+        {
+            if (self.segmentStyle.isScrollTitle) {
+                
+                self.scrollLine.frame = CGRectMake(coverX , self.zj_height - self.segmentStyle.scrollLineHeight, coverW , self.segmentStyle.scrollLineHeight);
+                
+            } else {
+                if (self.segmentStyle.isAdjustCoverOrLineWidth) {
+                    coverW = [self.titleWidths[_currentIndex] floatValue] + wGap;
+                    coverX = (firstLabel.zj_width - coverW) * 0.5;
+                }
+                self.scrollLine.frame = CGRectMake(coverX , self.zj_height - self.segmentStyle.scrollLineHeight, coverW , self.segmentStyle.scrollLineHeight);
             }
-
-            self.scrollLine.frame = CGRectMake(coverX , self.zj_height - self.segmentStyle.scrollLineHeight, coverW , self.segmentStyle.scrollLineHeight);
-
         }
-        
-        
+
     }
     
     if (self.coverLayer) {
@@ -306,14 +307,14 @@ static CGFloat const contentSizeXOff = 20.0;
                 coverW = [self.titleWidths[_currentIndex] floatValue] + wGap;
                 coverX = (firstLabel.zj_width - coverW) * 0.5;
             }
-
+            
             self.coverLayer.frame = CGRectMake(coverX, coverY, coverW, coverH);
             
         }
         
         
     }
-        
+    
 }
 
 
@@ -340,22 +341,26 @@ static CGFloat const contentSizeXOff = 20.0;
         }
         
         if (weakSelf.scrollLine) {
-            if (weakSelf.segmentStyle.isScrollTitle) {
-                weakSelf.scrollLine.zj_x = currentTitleView.zj_x;
-                weakSelf.scrollLine.zj_width = currentTitleView.zj_width;
-            } else {
-                if (self.segmentStyle.isAdjustCoverOrLineWidth) {
-                    CGFloat scrollLineW = [self.titleWidths[_currentIndex] floatValue] + wGap;
-                    CGFloat scrollLineX = currentTitleView.zj_x + (currentTitleView.zj_width - scrollLineW) * 0.5;
-                    weakSelf.scrollLine.zj_x = scrollLineX;
-                    weakSelf.scrollLine.zj_width = scrollLineW;
-                } else {
+            if (!CGSizeEqualToSize(CGSizeZero, self.segmentStyle.scrollLineSize)) {
+                weakSelf.scrollLine.center = CGPointMake(currentTitleView.zj_centerX, self.zj_height - weakSelf.segmentStyle.scrollLineSize.height);
+            }else
+            {
+                if (weakSelf.segmentStyle.isScrollTitle) {
                     weakSelf.scrollLine.zj_x = currentTitleView.zj_x;
                     weakSelf.scrollLine.zj_width = currentTitleView.zj_width;
+                } else {
+                    if (self.segmentStyle.isAdjustCoverOrLineWidth) {
+                        CGFloat scrollLineW = [self.titleWidths[_currentIndex] floatValue] + wGap;
+                        CGFloat scrollLineX = currentTitleView.zj_x + (currentTitleView.zj_width - scrollLineW) * 0.5;
+                        weakSelf.scrollLine.zj_x = scrollLineX;
+                        weakSelf.scrollLine.zj_width = scrollLineW;
+                    } else {
+                        weakSelf.scrollLine.zj_x = currentTitleView.zj_x;
+                        weakSelf.scrollLine.zj_width = currentTitleView.zj_width;
+                    }
+                    
                 }
-                
             }
-            
         }
         
         if (weakSelf.coverLayer) {
@@ -407,25 +412,31 @@ static CGFloat const contentSizeXOff = 20.0;
     
     if (self.scrollLine) {
         
-        if (self.segmentStyle.isScrollTitle) {
-            self.scrollLine.zj_x = oldTitleView.zj_x + xDistance * progress;
-            self.scrollLine.zj_width = oldTitleView.zj_width + wDistance * progress;
-        } else {
-            if (self.segmentStyle.isAdjustCoverOrLineWidth) {
-                CGFloat oldScrollLineW = [self.titleWidths[oldIndex] floatValue] + wGap;
-                CGFloat currentScrollLineW = [self.titleWidths[currentIndex] floatValue] + wGap;
-                wDistance = currentScrollLineW - oldScrollLineW;
-                
-                CGFloat oldScrollLineX = oldTitleView.zj_x + (oldTitleView.zj_width - oldScrollLineW) * 0.5;
-                CGFloat currentScrollLineX = currentTitleView.zj_x + (currentTitleView.zj_width - currentScrollLineW) * 0.5;
-                xDistance = currentScrollLineX - oldScrollLineX;
-                self.scrollLine.zj_x = oldScrollLineX + xDistance * progress;
-                self.scrollLine.zj_width = oldScrollLineW + wDistance * progress;
-            } else {
+        if (!CGSizeEqualToSize(CGSizeZero, self.segmentStyle.scrollLineSize)) {
+            self.scrollLine.center = CGPointMake(oldTitleView.zj_centerX + xDistance * progress, self.zj_height - self.segmentStyle.scrollLineSize.height);
+            
+        }else{
+            if (self.segmentStyle.isScrollTitle) {
                 self.scrollLine.zj_x = oldTitleView.zj_x + xDistance * progress;
                 self.scrollLine.zj_width = oldTitleView.zj_width + wDistance * progress;
+            } else {
+                if (self.segmentStyle.isAdjustCoverOrLineWidth) {
+                    CGFloat oldScrollLineW = [self.titleWidths[oldIndex] floatValue] + wGap;
+                    CGFloat currentScrollLineW = [self.titleWidths[currentIndex] floatValue] + wGap;
+                    wDistance = currentScrollLineW - oldScrollLineW;
+                    
+                    CGFloat oldScrollLineX = oldTitleView.zj_x + (oldTitleView.zj_width - oldScrollLineW) * 0.5;
+                    CGFloat currentScrollLineX = currentTitleView.zj_x + (currentTitleView.zj_width - currentScrollLineW) * 0.5;
+                    xDistance = currentScrollLineX - oldScrollLineX;
+                    self.scrollLine.zj_x = oldScrollLineX + xDistance * progress;
+                    self.scrollLine.zj_width = oldScrollLineW + wDistance * progress;
+                } else {
+                    self.scrollLine.zj_x = oldTitleView.zj_x + xDistance * progress;
+                    self.scrollLine.zj_width = oldTitleView.zj_width + wDistance * progress;
+                }
             }
         }
+        
 
     }
     
@@ -586,7 +597,8 @@ static CGFloat const contentSizeXOff = 20.0;
     if (!_scrollLine) {
         UIView *lineView = [[UIView alloc] init];
         lineView.backgroundColor = self.segmentStyle.scrollLineColor;
-
+        lineView.layer.cornerRadius = self.segmentStyle.scrollLineCornerRadius;
+        lineView.clipsToBounds = YES;
         _scrollLine = lineView;
         
     }

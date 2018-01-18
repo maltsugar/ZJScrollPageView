@@ -25,6 +25,9 @@ typedef void(^ExtraBtnOnClick)(UIButton *extraBtn);
 @property (weak, nonatomic) id<ZJScrollPageViewDelegate> delegate;
 @property (strong, nonatomic) UIImage *backgroundImage;
 
+/** 缓存所有标题ZJTitleView */
+@property (nonatomic, strong) NSMutableArray *titleViews;
+
 - (instancetype)initWithFrame:(CGRect )frame segmentStyle:(ZJSegmentStyle *)segmentStyle delegate:(id<ZJScrollPageViewDelegate>)delegate titles:(NSArray *)titles titleDidClick:(TitleBtnOnClickBlock)titleDidClick;
 
 

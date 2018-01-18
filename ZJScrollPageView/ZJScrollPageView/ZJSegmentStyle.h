@@ -93,4 +93,13 @@ typedef NS_OPTIONS(NSInteger, SegmentViewComponent) {
 /**未使用*/
 //@property (assign, nonatomic) SegmentViewComponent segmentViewComponent;
 
+
+// 设置segmentView的frame
+@property (nonatomic, assign) CGRect segmentFrame;
+// 指示线条的圆角
+@property (nonatomic, assign) float scrollLineCornerRadius;
+// 指示线条的size
+@property (nonatomic, assign) CGSize scrollLineSize;
+
+
 @end

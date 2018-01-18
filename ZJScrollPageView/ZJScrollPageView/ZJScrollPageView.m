@@ -79,7 +79,12 @@
 - (ZJScrollSegmentView *)segmentView {
     if (!_segmentView) {
         __weak typeof(self) weakSelf = self;
-        ZJScrollSegmentView *segment = [[ZJScrollSegmentView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.segmentStyle.segmentHeight) segmentStyle:self.segmentStyle delegate:self.delegate titles:self.titlesArray titleDidClick:^(ZJTitleView *titleView, NSInteger index) {
+        CGRect frame = CGRectMake(0, 0, self.bounds.size.width, self.segmentStyle.segmentHeight);
+        if (!CGSizeEqualToSize(self.segmentStyle.segmentFrame.size, CGSizeZero)) {
+            frame = self.segmentStyle.segmentFrame;
+        }
+        
+        ZJScrollSegmentView *segment = [[ZJScrollSegmentView alloc] initWithFrame:frame segmentStyle:self.segmentStyle delegate:self.delegate titles:self.titlesArray titleDidClick:^(ZJTitleView *titleView, NSInteger index) {
             
             [weakSelf.contentView setContentOffSet:CGPointMake(weakSelf.contentView.bounds.size.width * index, 0.0) animated:weakSelf.segmentStyle.isAnimatedContentViewWhenTitleClicked];
             
