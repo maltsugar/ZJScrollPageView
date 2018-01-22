@@ -100,6 +100,8 @@ typedef NS_OPTIONS(NSInteger, SegmentViewComponent) {
 @property (nonatomic, assign) float scrollLineCornerRadius;
 // 指示线条的size
 @property (nonatomic, assign) CGSize scrollLineSize;
+// 指示线条距离segment底部的距离(类似约束，递增时scrollLine向上移动，递减时向下)
+@property (nonatomic, assign) float scrollLineBotSpace;
 
 
 @end

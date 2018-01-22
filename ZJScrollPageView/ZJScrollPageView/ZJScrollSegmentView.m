@@ -275,23 +275,23 @@ static CGFloat const contentSizeXOff = 20.0;
     CGFloat coverW = firstLabel.zj_width;
     CGFloat coverH = self.segmentStyle.coverHeight;
     CGFloat coverY = (self.bounds.size.height - coverH) * 0.5;
-    
+
     if (self.scrollLine) {
         if (!CGSizeEqualToSize(CGSizeZero, self.segmentStyle.scrollLineSize)) {
             self.scrollLine.bounds = CGRectMake(0 , 0, self.segmentStyle.scrollLineSize.width , self.segmentStyle.scrollLineSize.height);
-            self.scrollLine.center = CGPointMake(firstLabel.zj_centerX, self.zj_height - self.segmentStyle.scrollLineSize.height);
+            self.scrollLine.center = CGPointMake(firstLabel.zj_centerX, self.zj_height - self.segmentStyle.scrollLineSize.height - self.segmentStyle.scrollLineBotSpace + 0.5*self.segmentStyle.scrollLineSize.height);
         }else
         {
             if (self.segmentStyle.isScrollTitle) {
                 
-                self.scrollLine.frame = CGRectMake(coverX , self.zj_height - self.segmentStyle.scrollLineHeight, coverW , self.segmentStyle.scrollLineHeight);
+                self.scrollLine.frame = CGRectMake(coverX , self.zj_height - self.segmentStyle.scrollLineHeight - self.segmentStyle.scrollLineBotSpace, coverW , self.segmentStyle.scrollLineHeight);
                 
             } else {
                 if (self.segmentStyle.isAdjustCoverOrLineWidth) {
                     coverW = [self.titleWidths[_currentIndex] floatValue] + wGap;
                     coverX = (firstLabel.zj_width - coverW) * 0.5;
                 }
-                self.scrollLine.frame = CGRectMake(coverX , self.zj_height - self.segmentStyle.scrollLineHeight, coverW , self.segmentStyle.scrollLineHeight);
+                self.scrollLine.frame = CGRectMake(coverX , self.zj_height - self.segmentStyle.scrollLineHeight - self.segmentStyle.scrollLineBotSpace, coverW, self.segmentStyle.scrollLineHeight);
             }
         }
 
@@ -339,10 +339,10 @@ static CGFloat const contentSizeXOff = 20.0;
             oldTitleView.currentTransformSx = 1.0;
             currentTitleView.currentTransformSx = weakSelf.segmentStyle.titleBigScale;
         }
-        
+
         if (weakSelf.scrollLine) {
             if (!CGSizeEqualToSize(CGSizeZero, self.segmentStyle.scrollLineSize)) {
-                weakSelf.scrollLine.center = CGPointMake(currentTitleView.zj_centerX, self.zj_height - weakSelf.segmentStyle.scrollLineSize.height);
+                weakSelf.scrollLine.center = CGPointMake(currentTitleView.zj_centerX, self.zj_height - weakSelf.segmentStyle.scrollLineSize.height - self.segmentStyle.scrollLineBotSpace + 0.5*self.segmentStyle.scrollLineSize.height);
             }else
             {
                 if (weakSelf.segmentStyle.isScrollTitle) {
@@ -411,9 +411,9 @@ static CGFloat const contentSizeXOff = 20.0;
     CGFloat wDistance = currentTitleView.zj_width - oldTitleView.zj_width;
     
     if (self.scrollLine) {
-        
+
         if (!CGSizeEqualToSize(CGSizeZero, self.segmentStyle.scrollLineSize)) {
-            self.scrollLine.center = CGPointMake(oldTitleView.zj_centerX + xDistance * progress, self.zj_height - self.segmentStyle.scrollLineSize.height);
+            self.scrollLine.center = CGPointMake(oldTitleView.zj_centerX + xDistance * progress, self.zj_height - self.segmentStyle.scrollLineSize.height - self.segmentStyle.scrollLineBotSpace + 0.5*self.segmentStyle.scrollLineSize.height);
             
         }else{
             if (self.segmentStyle.isScrollTitle) {
